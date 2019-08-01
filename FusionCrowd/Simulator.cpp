@@ -8,7 +8,7 @@ using namespace DirectX::SimpleMath;
 
 namespace FusionCrowd
 {
-	class Simulator::SimulatorImpl
+	class FUSION_CROWD_API Simulator::SimulatorImpl
 	{
 	public:
 		SimulatorImpl()
@@ -54,6 +54,11 @@ namespace FusionCrowd
 		NavSystem & GetNavSystem()
 		{
 			return *_navSystem;
+		}
+
+		Agent & GetById(size_t agentId)
+		{
+			return _agents[agentId];
 		}
 
 		std::shared_ptr<Goal> GetAgentGoal(size_t agentId) {
@@ -146,7 +151,7 @@ namespace FusionCrowd
 			_strategyComponents.push_back(strategyComponent);
 		}
 
-		void InitSimulator() { 
+		void InitSimulator() {
 			_navSystem->Init();
 		}
 
@@ -158,6 +163,19 @@ namespace FusionCrowd
 			{
 				_navMeshTactic->AddAgent(_agents[i].id);
 			}
+		}
+
+		bool IsPointInPolygonNavMesh(int idNode, float x, float y) {
+			DirectX::SimpleMath::Vector2 point(x, y);
+			std::shared_ptr<NavMesh>  navMesh = _navMeshTactic->GetNavMesh();
+			return navMesh->IsPointInPolygon(&navMesh->GetNode(idNode), point);
+		}
+
+		int CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour) {
+			int idNode = -1;
+			std::shared_ptr<NavMesh>  navMesh = _navMeshTactic->GetNavMesh();
+			idNode = navMesh->CheckObstacle(contour);
+			return idNode;
 		}
 
 		// TEMPORARY SOLUTION
@@ -195,6 +213,11 @@ namespace FusionCrowd
 	NavSystem & Simulator::GetNavSystem()
 	{
 		return pimpl->GetNavSystem();
+	}
+
+	Agent & Simulator::GetById(size_t agentId)
+	{
+		return pimpl->GetById(agentId);
 	}
 
 	std::shared_ptr<Goal> Simulator::GetAgentGoal(size_t agentId) {
@@ -239,5 +262,9 @@ namespace FusionCrowd
 	void Simulator::UpdateNav(float x, float y)
 	{
 		pimpl->UpdateNav(x, y);
+	}
+
+	int  Simulator::CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour) {
+		return pimpl->CheckObstacle(contour);
 	}
 }

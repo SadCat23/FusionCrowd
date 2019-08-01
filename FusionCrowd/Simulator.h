@@ -25,6 +25,7 @@ namespace FusionCrowd
 		bool DoStep();
 
 		size_t GetAgentCount() const;
+		Agent & GetById(size_t agentId);
 		std::shared_ptr<Goal> GetAgentGoal(size_t agentId);
 
 		NavSystem & GetNavSystem();
@@ -49,8 +50,11 @@ namespace FusionCrowd
 		void InitSimulator();
 
 		void UpdateNav(float x, float y);
+
+		int CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour);
+
 	private:
-		class SimulatorImpl;
+		class FUSION_CROWD_API SimulatorImpl;
 
 		std::unique_ptr<SimulatorImpl> pimpl;
 	};

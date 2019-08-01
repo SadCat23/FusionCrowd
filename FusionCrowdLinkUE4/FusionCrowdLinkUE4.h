@@ -51,6 +51,7 @@ public:
 	LINKFUSIONCROWD_API void AddAgents(int agentsCount);
 	LINKFUSIONCROWD_API void GetPositionAgents(agentInfo* agentsPos);
 	LINKFUSIONCROWD_API void UpdateNav(float x, float y);
+	//LINKFUSIONCROWD_API int CheckObstacle(float** countur, int counterVertex);
 
 private:
 	FusionCrowd::Simulator* sim;

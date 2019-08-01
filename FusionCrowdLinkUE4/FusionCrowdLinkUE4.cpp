@@ -141,7 +141,6 @@ void FusionCrowdLinkUE4::GetPositionAgents(agentInfo* ueAgentInfo)
 		ueAgentInfo[i].orient[1] = spatialInfo.orientY;
 
 		ueAgentInfo[i].radius = spatialInfo.radius;
-
 		auto opComp = sim->GetById(i).opComponent;
 		auto name = opComp != nullptr ? opComp->GetName() : std::string("NO_OP_COMPONENT");
 
@@ -154,3 +153,9 @@ void FusionCrowdLinkUE4::UpdateNav(float x, float y)
 {
 	sim->UpdateNav(0, 0);
 }
+
+//int FusionCrowdLinkUE4::CheckObstacle(float** countur, int counterVertex)
+//{
+//
+//	return 0;
+//}

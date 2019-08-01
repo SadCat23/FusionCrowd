@@ -352,6 +352,44 @@ namespace FusionCrowd
 	}
 
 
+	bool NavMesh::IsPointInPolygon(NavMeshNode* nodes, DirectX::SimpleMath::Vector2 point)
+	{
+		int nodeCount = nodes->getVertexCount();
+		int j = nodeCount - 1;
+		bool oddNodes = false;
+		for (int i = 0; i < nodeCount; i++) {
+			int idV = nodes->getVertexID(i);
+			int idV1 = nodes->getVertexID(j);
+			DirectX::SimpleMath::Vector2 v0 = vertices[idV];
+			DirectX::SimpleMath::Vector2 v1 = vertices[idV1];
+			if ((v0.y < point.y && v1.y >= point.y || v1.y < point.y && v0.y >= point.y) && (v0.x <= point.x || v1.x <= point.x))
+			{
+				oddNodes ^= (v0.x + (point.y - v0.y) / (v1.y - v0.y) * (v1.x - v0.x) < point.x);
+			}
+			j = i;
+		}
+		return oddNodes;
+	}
+
+	int NavMesh::CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour)
+	{
+		for (int i = 0; i < nCount; i++)
+		{
+			bool isConsist = true;
+			for (int j = 0; j < contour.size(); j++)
+			{
+				isConsist = IsPointInPolygon(&nodes[i], contour[j]);
+				if (!isConsist) {
+					break;
+				}
+			}
+			if (isConsist) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	NavMesh::~NavMesh()
 	{
 		clear();

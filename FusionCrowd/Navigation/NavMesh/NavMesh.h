@@ -48,6 +48,10 @@ namespace FusionCrowd
 		//Load
 		static std::shared_ptr<NavMesh> Load(const std::string& FileName);
 
+
+		bool IsPointInPolygon(NavMeshNode* nodes, DirectX::SimpleMath::Vector2 point);
+		int CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour);
+
 		void clear();
 		bool finalize();
 		//Vertex
