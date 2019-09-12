@@ -178,6 +178,64 @@ namespace FusionCrowd
 			return idNode;
 		}
 
+		void GetNewNode(std::vector<DirectX::SimpleMath::Vector2> outer, std::vector<DirectX::SimpleMath::Vector2> contour,
+			std::vector<int>& triangles, std::vector<DirectX::SimpleMath::Vector2>& vertex)
+		{
+			std::shared_ptr<NavMesh>  navMesh = _navMeshTactic->GetNavMesh();
+			navMesh->TriangulateCounturAndObstale(outer, contour, triangles, vertex);
+		}
+
+		void AddNavMeshNode(std::vector<int> idNodes, std::vector<DirectX::SimpleMath::Vector2> contour)
+		{
+			std::shared_ptr<NavMesh>  navMesh = _navMeshTactic->GetNavMesh();
+
+			std::vector<DirectX::SimpleMath::Vector2> outerTest;
+			DirectX::SimpleMath::Vector2* v = navMesh->GetVertices();
+
+			for (int i = 0; i < idNodes.size(); i++) {
+				int  vCount = navMesh->GetNode(idNodes[i]).getVertexCount();
+				for (int j = 0; j < vCount; j++) {
+					outerTest.push_back(v[navMesh->GetNode(idNodes[i]).getVertexID(j)]);
+				}
+			}
+
+			std::vector<DirectX::SimpleMath::Vector2> contourTest;
+			contourTest.push_back(DirectX::SimpleMath::Vector2(-81.5f, 20.0f));
+			contourTest.push_back(DirectX::SimpleMath::Vector2(-83.5f, 22.0f));
+			contourTest.push_back(DirectX::SimpleMath::Vector2(-81.1f, 22.0f));
+			contourTest.push_back(DirectX::SimpleMath::Vector2(-81.0f, 21.5f));
+
+			//idNodes.push_back(494);
+			//idNodes.push_back(495);
+			//idNodes.push_back(496);
+			//std::vector<int> res;
+			//res = _navMesh->GetCountur(idNodes);
+			//_primaryNavMesh = _navMesh;
+
+			std::vector<int> triangles;
+			std::vector<DirectX::SimpleMath::Vector2> vertex;
+			navMesh->TriangulateCounturAndObstale(outerTest, contourTest, triangles, vertex);
+
+			//std::vector<int> v12;
+
+			NavMeshInfo::NavMeshInfo newNodes = navMesh->GetNewNode(triangles, vertex, contourTest);
+			std::shared_ptr<NavMesh> m;
+			std::unique_ptr<NavMesh> upt(new NavMesh("Test"));
+			navMesh->AddNode(newNodes, idNodes, m);
+
+
+			_navMeshTactic->SetNavMesh(m);
+		}
+
+		std::vector<int> GetIntersectionNode(std::vector<DirectX::SimpleMath::Vector2> contour)
+		{
+			std::vector<int> idNodes;
+			std::shared_ptr<NavMesh>  navMesh = _navMeshTactic->GetNavMesh();
+			idNodes = navMesh->GetListIncomingNodes(contour);
+			return idNodes;
+		}
+
+
 		// TEMPORARY SOLUTION
 		std::shared_ptr<NavMeshComponent> _navMeshTactic;
 	private:
@@ -266,5 +324,26 @@ namespace FusionCrowd
 
 	int  Simulator::CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour) {
 		return pimpl->CheckObstacle(contour);
+	}
+
+	void Simulator::GetNewNode(std::vector<DirectX::SimpleMath::Vector2> outer, std::vector<DirectX::SimpleMath::Vector2> contour,
+		std::vector<int>& triangles, std::vector<DirectX::SimpleMath::Vector2>& vertex)
+	{
+		pimpl->GetNewNode(outer, contour, triangles, vertex);
+	}
+
+	void Simulator::AddNavMeshNode(std::vector<int> idNodes, std::vector<DirectX::SimpleMath::Vector2> contour)
+	{
+		pimpl->AddNavMeshNode(idNodes, contour);
+	}
+
+	void Simulator::GetIntersectionNode(std::vector<DirectX::SimpleMath::Vector2> contour, int*& idNodes, int size)
+	{
+		std::vector<int> r = pimpl->GetIntersectionNode(contour);
+		idNodes = new int[contour.size()];
+
+		for (int i = 0; i < r.size(); i++) {
+			idNodes[i] = r[i];
+		}
 	}
 }

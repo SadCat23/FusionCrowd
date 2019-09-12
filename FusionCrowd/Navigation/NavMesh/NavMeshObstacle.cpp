@@ -22,7 +22,7 @@ namespace FusionCrowd
 
 	using namespace DirectX::SimpleMath;
 
-	bool NavMeshObstacle::LoadFromAscii(std::ifstream& f, Vector2* vertices)
+	bool NavMeshObstacle::LoadFromAscii(std::ifstream& f, int id, DirectX::SimpleMath::Vector2* vertices)
 	{
 		size_t v0, v1, node;
 		long int nextObst;
@@ -32,6 +32,12 @@ namespace FusionCrowd
 		}
 		else
 		{
+			_v0 = v0;
+			_v1 = v1;
+
+			_n = node;
+			_idObstacle = id;
+
 			_point = vertices[v0];
 			Vector2 disp = vertices[v1] - vertices[v0];
 			_length = disp.Length();
@@ -53,6 +59,34 @@ namespace FusionCrowd
 		}
 		return true;
 	}
+
+	bool NavMeshObstacle::SetObstacle(int v0, int v1, int n, int nextObst, DirectX::SimpleMath::Vector2* vertices)
+	{
+		_v0 = v0;
+		_v1 = v1;
+
+		_n = n;
+
+		_point = vertices[v0];
+		Vector2 disp = vertices[v1] - vertices[v0];
+		_length = disp.Length();
+		if (_length <= MIN_EDGE_WIDTH)
+		{
+			return false;
+		}
+		_unitDir = disp / _length;
+
+		if (nextObst >= 0)
+		{
+			_nextObstacle = (Obstacle *)nextObst;
+		}
+		else
+		{
+			_nextObstacle = (Obstacle *)NO_NEIGHBOR_OBST;
+		}
+		_node = (NavMeshNode *)n;
+	}
+
 #ifdef _WIN32
 #pragma warning( default : 4312 )
 #endif

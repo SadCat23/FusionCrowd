@@ -21,7 +21,8 @@ namespace FusionCrowd
 		{
 		}
 
-		bool LoadFromAscii(std::ifstream& f, DirectX::SimpleMath::Vector2* vertices);
+		bool LoadFromAscii(std::ifstream& f, int id, DirectX::SimpleMath::Vector2* vertices);
+		bool SetObstacle(int v0, int v1, int n, int nextObst, DirectX::SimpleMath::Vector2* vertices);
 		inline const NavMeshNode* getNode() const { return _node; }
 
 		~NavMeshObstacle();
@@ -30,5 +31,11 @@ namespace FusionCrowd
 		friend class NavMesh;
 	protected:
 		NavMeshNode* _node;
+
+		int _idObstacle;
+		int _v0;
+		int _v1;
+
+		int _n;
 	};
 }

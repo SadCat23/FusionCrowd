@@ -30,6 +30,7 @@ namespace FusionCrowd
 
 		inline DirectX::SimpleMath::Vector2 getDirection() const { return _dir; }
 		NavMeshNode* getFirstNode() const { return _node0; }
+		NavMeshNode* getSecondNode() const { return _node1;  };
 		NavMeshNode* getOtherByID(unsigned int id) const;
 		NavMeshNode* getOtherByPtr(const NavMeshNode* node);
 		const NavMeshNode* getOtherByPtr(const NavMeshNode* node) const;
@@ -67,13 +68,22 @@ namespace FusionCrowd
 		float getDist(const DirectX::SimpleMath::Vector2& pt) const { return sqrtf(getSqDist(pt)); }
 		float getNodeDistance(float minWidth);
 		inline float getNodeDistance() const { return _distance; }
-		bool loadFromAscii(std::ifstream& f, DirectX::SimpleMath::Vector2* vertices);
+		bool loadFromAscii(std::ifstream& f, int id, DirectX::SimpleMath::Vector2* vertices);
+		bool setEdge(int v0, int v1, int n0, int n1, DirectX::SimpleMath::Vector2* vertices);
 		bool pointOnLeft(unsigned int id) const;
 		bool pointOnLeft(const NavMeshNode* node) const;
 		friend class NavMesh;
 	protected:
 		DirectX::SimpleMath::Vector2 _point;
 		DirectX::SimpleMath::Vector2 _dir;
+
+
+		int idEdge;
+		int _v0;
+		int _v1;
+		int _n0;
+		int _n1;
+
 		float _width;
 		float _distance;
 		NavMeshNode* _node0;

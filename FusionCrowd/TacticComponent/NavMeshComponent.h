@@ -29,6 +29,12 @@ namespace FusionCrowd
 
 		void Update(float timeStep);
 		void UpdateNavMesh(DirectX::SimpleMath::Vector2 point);
+
+		void SetNavMesh(std::shared_ptr<NavMesh> navMesh)
+		{
+			_navMesh = navMesh;
+			_localizer->setNavMesh(_navMesh);
+		}
 		unsigned int getNodeId(size_t agentId) const;
 		unsigned int getNodeId(size_t agentId, const std::string& grpName, bool searchAll = false);
 
@@ -56,6 +62,7 @@ namespace FusionCrowd
 
 		float _headingDevCos;
 		std::shared_ptr<NavMesh> _navMesh;
+		std::shared_ptr<NavMesh> _primaryNavMesh;
 		std::shared_ptr<NavMeshLocalizer> _localizer;
 		std::vector<AgentStruct> _agents;
 	};

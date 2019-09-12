@@ -66,6 +66,11 @@ namespace FusionCrowd
 		void setTrackAll() { _trackAll = true; }
 		void updateAgentPosition(size_t agentId, const unsigned int oldLoc, unsigned int newLoc);
 
+		void setNavMesh(std::shared_ptr<NavMesh>& navMesh)
+		{
+			_navMesh = navMesh;
+		}
+
 		std::shared_ptr<PathPlanner> getPlanner() { return _planner; }
 		void setPlanner(std::shared_ptr<PathPlanner> planner) { _planner = planner; }
 

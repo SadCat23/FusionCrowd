@@ -172,6 +172,19 @@ namespace FusionCrowd
 		return true;
 	}
 
+	void NavMeshPoly::SetVertices(std::vector<int> vertexs)
+	{
+		vertCount = vertexs.size();
+		if (vertIDs) delete[] vertIDs;
+		vertIDs = new unsigned int[vertCount];
+		for (size_t i = 0; i < vertCount; ++i) {
+			vertIDs[i] = vertexs[i];
+		}
+		A = 0;
+		B = 0;
+		C = 0;
+	}
+
 	void NavMeshPoly::initialize(size_t vCount, unsigned int* ids, float newA, float newB, float newC)
 	{
 		vertCount = vCount;

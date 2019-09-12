@@ -137,6 +137,33 @@ namespace FusionCrowd
 		}
 		return true;
 	}
+
+	void NavMeshNode::setPolygon(std::vector<int> vertexs)
+	{
+		_poly.SetVertices(vertexs);
+	}
+
+	void NavMeshNode::setEdge(std::vector<int> edges)
+	{
+		_edgeCount = edges.size();
+		_edges = new NavMeshEdge*[_edgeCount];
+		for (size_t e = 0; e < _edgeCount; ++e)
+		{
+			size_t eID = edges[e];
+			_edges[e] = (NavMeshEdge *)eID;
+		}
+	}
+
+	void NavMeshNode::setObstacle(std::vector<int> obstacles)
+	{
+		_obstCount = obstacles.size();
+		_obstacles = new NavMeshObstacle*[_obstCount];
+		for (size_t o = 0; o < _obstCount; ++o)
+		{
+			size_t oID = obstacles[o];
+			_obstacles[o] = (NavMeshObstacle *)oID;
+		}
+	}
 }
 #ifdef _WIN32
 #pragma warning( default : 4312 )

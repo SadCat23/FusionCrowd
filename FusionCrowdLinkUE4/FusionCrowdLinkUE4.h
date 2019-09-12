@@ -51,6 +51,10 @@ public:
 	LINKFUSIONCROWD_API void AddAgents(int agentsCount);
 	LINKFUSIONCROWD_API void GetPositionAgents(agentInfo* agentsPos);
 	LINKFUSIONCROWD_API void UpdateNav(float x, float y);
+	LINKFUSIONCROWD_API void GetTrinagles();
+	LINKFUSIONCROWD_API void GetNewNode(float* outer, float* contour, int outCount, int conturCount, int*& triangels, int& triangelsCount, float*& vertexs, int& vertexsCount);
+	LINKFUSIONCROWD_API void AddNode(int* idNodes, int idNodesCount, float* contour, int conturCount);
+	LINKFUSIONCROWD_API void GetIntersectionNode(float* contour, int conturCount, int*& idNodes, int& idNodesCount);
 	//LINKFUSIONCROWD_API int CheckObstacle(float** countur, int counterVertex);
 
 private:

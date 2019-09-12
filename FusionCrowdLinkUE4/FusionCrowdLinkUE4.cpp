@@ -154,6 +154,70 @@ void FusionCrowdLinkUE4::UpdateNav(float x, float y)
 	sim->UpdateNav(0, 0);
 }
 
+void FusionCrowdLinkUE4::GetTrinagles()
+{
+
+}
+void FusionCrowdLinkUE4::GetNewNode(float* outer, float* contour, int outCount, int conturCount, int*& triangels, int& triangelsCount, float*& vertexs, int& vertexsCount)
+{
+	std::vector<Vector2> outerV;
+	std::vector<Vector2> contourV;
+
+	std::vector<int> triangel;
+	std::vector<Vector2> vertex;
+
+	for (int i = 0; i < outCount * 2; i+=2) {
+		outerV.push_back(Vector2(outer[i], outer[i+1]));
+	}
+
+	for (int i = 0; i < conturCount * 2; i+=2) {
+		contourV.push_back(Vector2(contour[i], contour[i + 1]));
+	}
+
+	sim->GetNewNode(outerV, contourV, triangel, vertex);
+
+	triangelsCount = triangel.size();
+	vertexsCount = vertex.size() * 2;
+
+	triangels = new int[triangelsCount];
+	vertexs = new float[vertexsCount];
+
+	for (int i = 0; i < triangelsCount; i++) {
+		triangels[i] = triangel[i];
+	}
+
+	for (int i = 0; i < vertexsCount; i+=2) {
+		vertexs[i] = vertex[i/2].x;
+		vertexs[i+1] = vertex[i/2].y;
+	}
+}
+
+void FusionCrowdLinkUE4::AddNode(int* idNodes, int idNodesCount,float* contour, int conturCount)
+{
+	std::vector<Vector2> contourV;
+	for (int i = 0; i < conturCount * 2; i += 2) {
+		contourV.push_back(Vector2(contour[i], contour[i + 1]));
+	}
+
+	std::vector<int> idNodesV;
+
+	for (int i = 0; i < idNodesCount; i++) {
+		idNodesV.push_back(idNodes[i]);
+	}
+
+	sim->AddNavMeshNode(idNodesV,contourV);
+}
+
+void FusionCrowdLinkUE4::GetIntersectionNode(float* contour, int conturCount, int*& idNodes, int& idNodesCount)
+{
+	std::vector<Vector2> contourV;
+	for (int i = 0; i < conturCount * 2; i += 2) {
+		contourV.push_back(Vector2(contour[i], contour[i + 1]));
+	}
+	sim->GetIntersectionNode(contourV, idNodes, idNodesCount);
+}
+
+
 //int FusionCrowdLinkUE4::CheckObstacle(float** countur, int counterVertex)
 //{
 //

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "Config.h"
 #include "Math/Util.h"
@@ -20,6 +21,7 @@ namespace FusionCrowd
 		DirectX::SimpleMath::Vector2 getGradient() const { return DirectX::SimpleMath::Vector2(A, B); }
 		bool loadFromAscii(std::ifstream& f);
 		bool loadFromBinary(std::ifstream& f);
+		void SetVertices(std::vector<int> vertexs);
 		void initialize(size_t vCount, unsigned int* ids, float A = 0.f, float B = 0.f,
 		                float C = 0.f);
 

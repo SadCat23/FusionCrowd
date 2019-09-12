@@ -84,7 +84,7 @@ namespace TestFusionCrowd
 
 	void NeighbourSearchBenchCase::Run(const float & coeff)
 	{
-		std::string navPath = "Resources/square.nav";
+		std::string navPath = "Resources/graph.nav";
 
 		FusionCrowd::Simulator sim(navPath.c_str());
 		auto kComponent = std::make_shared<FusionCrowd::Karamouzas::KaramouzasComponent>(sim);

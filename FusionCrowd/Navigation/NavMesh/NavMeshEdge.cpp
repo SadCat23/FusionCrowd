@@ -105,7 +105,7 @@ namespace FusionCrowd
 		}
 	}
 
-	bool NavMeshEdge::loadFromAscii(std::ifstream& f, Vector2* vertices)
+	bool NavMeshEdge::loadFromAscii(std::ifstream& f, int id, Vector2* vertices)
 	{
 		size_t v0, v1, n0, n1;
 		if (!(f >> v0 >> v1 >> n0 >> n1))
@@ -114,6 +114,12 @@ namespace FusionCrowd
 		}
 		else
 		{
+			_v0 = v0;
+			_v1 = v1;
+
+			_n0 = n0;
+			_n1 = n1;
+
 			_point = vertices[v0];
 			Vector2 disp = vertices[v1] - vertices[v0];
 			_width = disp.Length();
@@ -126,6 +132,35 @@ namespace FusionCrowd
 			_node0 = (NavMeshNode *)n0;
 			_node1 = (NavMeshNode *)n1;
 		}
+		return true;
+	}
+
+	bool NavMeshEdge::setEdge(int v0, int v1, int n0, int n1, Vector2* vertices)
+	{
+		_v0 = v0;
+		_v1 = v1;
+
+		_n0 = n0;
+		_n1 = n1;
+
+		_v0 = v0;
+		_v1 = v1;
+
+		_n0 = n0;
+		_n1 = n1;
+
+		_point = vertices[v0];
+		Vector2 disp = vertices[v1] - vertices[v0];
+		_width = disp.Length();
+		if (_width <= MIN_EDGE_WIDTH)
+		{
+			return false;
+		}
+		_dir = disp / _width;
+		// Stash indices as pointers
+		_node0 = (NavMeshNode *)n0;
+		_node1 = (NavMeshNode *)n1;
+
 		return true;
 	}
 

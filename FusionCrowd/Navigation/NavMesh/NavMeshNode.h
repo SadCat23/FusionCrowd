@@ -1,6 +1,8 @@
 #pragma once
 
 #include <d3d11.h>
+#include <vector>
+
 #include "SimpleMath.h"
 #include "NavMeshEdge.h"
 #include "NavMeshObstacle.h"
@@ -57,6 +59,11 @@ namespace FusionCrowd
 		}
 
 		bool loadFromAscii(std::ifstream& f);
+
+		void setPolygon(std::vector<int> vertexs);
+		void setEdge(std::vector<int> edges);
+		void setObstacle(std::vector<int> obstacles);
+
 
 		inline float getElevation(const DirectX::SimpleMath::Vector2& p) const
 		{

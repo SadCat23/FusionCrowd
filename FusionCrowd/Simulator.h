@@ -50,9 +50,13 @@ namespace FusionCrowd
 		void InitSimulator();
 
 		void UpdateNav(float x, float y);
+		void GetNewNode(std::vector<DirectX::SimpleMath::Vector2> outer, std::vector<DirectX::SimpleMath::Vector2> contour,
+			std::vector<int>& triangles, std::vector<DirectX::SimpleMath::Vector2>& vertex);
 
 		int CheckObstacle(std::vector<DirectX::SimpleMath::Vector2> contour);
 
+		void AddNavMeshNode(std::vector<int> idNodes, std::vector<DirectX::SimpleMath::Vector2> contour);
+		void GetIntersectionNode(std::vector<DirectX::SimpleMath::Vector2> contour, int*& idNodes, int size);
 	private:
 		class FUSION_CROWD_API SimulatorImpl;
 
