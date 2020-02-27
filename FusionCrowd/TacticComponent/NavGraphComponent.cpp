@@ -7,8 +7,8 @@ using namespace DirectX::SimpleMath;
 namespace FusionCrowd
 {
 
-	NavGraphComponent::NavGraphComponent(std::shared_ptr<Simulator> simulator,
-		std::shared_ptr<NavSystem> navSystem) : _simulator(simulator), _navSystem(navSystem), _navGraph(navSystem->GetNavGraph())
+	NavGraphComponent::NavGraphComponent(std::shared_ptr<Simulator> simulator, std::shared_ptr<NavSystem> navSystem)
+		: _simulator(simulator), _navSystem(navSystem), _navGraph(navSystem->GetNavGraph())
 	{ }
 
 	void NavGraphComponent::AddAgent(size_t id)
@@ -18,6 +18,7 @@ namespace FusionCrowd
 		AgentStruct agtStruct;
 		agtStruct.id = id;
 		agtStruct.route = pathPlanner.GetRoute(curNodeId, curNodeId);
+		agtStruct.route->points.push_back(Vector2());
 		agtStruct.nodesComplete = 0;
 		agtStruct.goalNodeID = agtStruct.route->nodes.at(agtStruct.nodesComplete);
 		_agents.push_back(agtStruct);
@@ -26,10 +27,23 @@ namespace FusionCrowd
 	void NavGraphComponent::Replan(AgentSpatialInfo & agentInfo, AgentStruct & agentStruct)
 	{
 		auto & agentGoal = _simulator->GetAgentGoal(agentStruct.id);
-		size_t curNodeId = _navGraph->GetClosestNodeIdByPosition(agentInfo.pos, _navGraph->GetAllNodes());
-		size_t goalNodeId = _navGraph->GetClosestNodeIdByPosition(agentGoal.getCentroid(), _navGraph->GetAllNodes());
+
+		size_t curNodeId;
+		Vector2 init_point = _navGraph->GetClosiestPointAndNodeId(agentInfo.pos, curNodeId);
+		size_t goalNodeId;
+		Vector2 goal_point = _navGraph->GetClosiestPointAndNodeId(agentGoal.getCentroid(), goalNodeId);
+
+		//size_t curNodeId = _navGraph->GetClosestNodeIdByPosition(agentInfo.pos, _navGraph->GetAllNodes());
+		//size_t goalNodeId = _navGraph->GetClosestNodeIdByPosition(agentGoal.getCentroid(), _navGraph->GetAllNodes());
 		NavGraphPathPlanner pathPlanner(_navGraph);
 		agentStruct.route = pathPlanner.GetRoute(curNodeId, goalNodeId);
+
+		agentStruct.route->points.push_back(init_point);
+		for (int i = agentStruct.route->nodes.size() - 1; i >=0 ; i--) {
+			agentStruct.route->points.push_back(_navGraph->GetNode(agentStruct.route->nodes[i]).position);
+		}
+		agentStruct.route->points.push_back(goal_point);
+
 		agentStruct.nodesComplete = 0;
 		agentStruct.goalNodeID = agentStruct.route->nodes.at(agentStruct.route->nodes.size() - agentStruct.nodesComplete - 1);
 	}
@@ -64,9 +78,23 @@ namespace FusionCrowd
 
 	void NavGraphComponent::SetPrefVelocity(AgentSpatialInfo & agentInfo, AgentStruct & agentStruct, float timeStep)
 	{
+		Vector2 currentGoal = agentStruct.route->points[0];
+		/*if(agentStruct.nodesComplete == agentStruct.route->nodes.size())
+		{
+			// getting to destination point directly
+			currentGoal = _simulator->GetAgentGoal(agentInfo.id).getTargetPoint(agentInfo.pos, acceptanceRadius);
+		} else
+		{
+			currentGoal  =_navGraph->GetNode(agentStruct.goalNodeID).position;
+		}*/
 
-		NavGraphNode goalNode = _navGraph->GetNode(agentStruct.goalNodeID);
-		float dist = goalNode.position.Distance(goalNode.position, agentInfo.pos);
+		float dist = Vector2::Distance(currentGoal, agentInfo.pos);
+
+		if (abs(dist) < 1.5f && agentStruct.route->points.size() > 1) {
+			agentStruct.route->points.erase(agentStruct.route->points.begin());
+			currentGoal = agentStruct.route->points[0];
+			dist = Vector2::Distance(currentGoal, agentInfo.pos);
+		}
 
 		if(dist < agentInfo.prefSpeed * timeStep)
 		{
@@ -78,12 +106,11 @@ namespace FusionCrowd
 
 		if (abs(dist) > 1e-6)
 		{
-			agentInfo.prefVelocity.setSingle((goalNode.position - agentInfo.pos) / dist);
+			agentInfo.prefVelocity.setSingle((currentGoal - agentInfo.pos) / dist);
 		} else
 		{
 			agentInfo.prefVelocity.setSpeed(0);
 		}
-
 	}
 
 	DirectX::SimpleMath::Vector2 NavGraphComponent::GetClosestAvailablePoint(DirectX::SimpleMath::Vector2 p)
@@ -93,13 +120,25 @@ namespace FusionCrowd
 
 	void NavGraphComponent::UpdateLocation(AgentSpatialInfo & agentInfo, AgentStruct& agentStruct, float deltaTime) const
 	{
+		if(agentStruct.nodesComplete == agentStruct.route->nodes.size())
+		{
+			// getting to destination point directly
+			return;
+		}
+
 		NavGraphNode goalNode = _navGraph->GetNode(agentStruct.goalNodeID);
 		float dist = goalNode.position.Distance(goalNode.position, agentInfo.pos);
-		if (abs(dist) < 1.0 && agentStruct.nodesComplete < agentStruct.route->nodes.size()-1)
+		if (abs(dist) < acceptanceRadius && agentStruct.nodesComplete < agentStruct.route->nodes.size())
 		{
 			agentStruct.nodesComplete++;
 
-			agentStruct.goalNodeID = agentStruct.route->nodes.at(agentStruct.route->nodes.size() - agentStruct.nodesComplete - 1);
+			if(agentStruct.nodesComplete == agentStruct.route->nodes.size())
+			{
+				agentStruct.goalNodeID = -1;
+			}
+			else {
+				agentStruct.goalNodeID = agentStruct.route->nodes.at(agentStruct.route->nodes.size() - agentStruct.nodesComplete - 1);
+			}
 		}
 
 	}

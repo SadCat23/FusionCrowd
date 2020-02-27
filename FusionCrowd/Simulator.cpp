@@ -126,6 +126,8 @@ namespace FusionCrowd
 			std::uniform_real_distribution<float> dist(0.9f, 1.1f);
 			info.prefSpeed *= dist(_rnd_seed);
 
+			info.useNavMeshObstacles = (tacticId == ComponentIds::NAVMESH_ID);
+
 			Vector2 goal_pos = _tacticComponents[tacticId]->GetClosestAvailablePoint(info.pos);
 			_navSystem->AddAgent(info);
 
@@ -160,9 +162,12 @@ namespace FusionCrowd
 
 		void SetAgentGoal(Agent & agent, DirectX::SimpleMath::Vector2 goalPos)
 		{
-			auto point = _tacticComponents[ComponentIds::NAVMESH_ID]->GetClosestAvailablePoint(goalPos);
-			auto goal = _goalFactory.CreateDiscGoal(point, 1.5f);
-			agent.currentGoal = goal;
+			if (auto tactic = agent.tacticComponent.lock())
+			{
+				auto point = _tacticComponents[tactic->GetId()]->GetClosestAvailablePoint(goalPos);
+				auto goal = _goalFactory.CreateDiscGoal(point, 1.5f);
+				agent.currentGoal = goal;
+			}
 		}
 
 		void SetAgentGoal(size_t agentId, DirectX::SimpleMath::Vector2 goalPos)
