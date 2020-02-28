@@ -12,7 +12,12 @@
 namespace FusionCrowd
 {
 	namespace Bicycle
+
 	{
+
+		
+
+
 		struct AgentParamentrs
 		{
 			float _mass;
@@ -23,10 +28,12 @@ namespace FusionCrowd
 			float _orintY;
 			float _acceleration;
 			float _negativeAcceleration;
+			bool _LookAt;
+			DirectX::SimpleMath::Vector2 _curentTarget;
 
-			AgentParamentrs() :_mass(80.0f), _theta(0.0f),_delta(0.0f),_length(2.0f),_orintX(1.0f),_orintY(0.0f), _acceleration(0.5f), _negativeAcceleration(0.5f)
+			AgentParamentrs() :_mass(80.0f), _theta(0.0f),_delta(0.0f),_length(2.0f),_orintX(1.0f),_orintY(0.0f), _acceleration(0.5f), _negativeAcceleration(0.5f), _LookAt(false), _curentTarget(DirectX::SimpleMath::Vector2(0.0f,0.0f))
 			{
-
+				
 			}
 			AgentParamentrs(float mass) : _mass(mass)
 			{
@@ -37,7 +44,6 @@ namespace FusionCrowd
 		{
 		public:
 			BicycleComponent(std::shared_ptr<NavSystem> navSystem);
-			BicycleComponent(std::shared_ptr<NavSystem> navSystem, float AGENT_SCALE, float OBST_SCALE, float REACTION_TIME, float BODY_FORCE, float FRICTION, float FORCE_DISTANCE);
 			~BicycleComponent();
 
 			ComponentId GetId() override { return ComponentIds::BICYCLE; };
@@ -45,7 +51,6 @@ namespace FusionCrowd
 			void AddAgent(size_t id) override;
 			void AddAgent(size_t id, float mass);
 			bool DeleteAgent(size_t id) override;
-
 			void Update(float timeStep) override;
 
 		private:
@@ -56,6 +61,7 @@ namespace FusionCrowd
 			std::shared_ptr<NavSystem> _navSystem;
 			std::map<int, AgentParamentrs> _agents;
 
+			
 			float _agentScale;
 			float _obstScale;
 			float _reactionTime;
