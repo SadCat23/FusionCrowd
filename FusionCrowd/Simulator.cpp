@@ -306,6 +306,7 @@ namespace FusionCrowd
 					info.pos.x, info.pos.y,
 					info.vel.x, info.vel.y,
 					info.orient.x, info.orient.y,
+					info.delta,
 					info.radius,
 					op, tactic, strat,
 					g.getCentroid().x, g.getCentroid().y

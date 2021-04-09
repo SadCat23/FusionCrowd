@@ -105,14 +105,14 @@ int main()
 	std::vector<std::shared_ptr<ITestCase>> cases =
 	{
 
-		std::shared_ptr<ITestCase>((ITestCase*) new FsmTestCase(FusionCrowd::ComponentIds::BICYCLE, 50, 2000, true)),
-		// std::shared_ptr<ITestCase>((ITestCase*) new TradeshowTestCase(1025, 1000, true)),
+		std::shared_ptr<ITestCase>((ITestCase*) new FsmTestCase(FusionCrowd::ComponentIds::ORCA_ID, 1, 1000, true)),
+		//std::shared_ptr<ITestCase>((ITestCase*) new TradeshowTestCase(2, 800, true)),
 		// std::shared_ptr<ITestCase>((ITestCase*) new ZanlungoCase()),
-		// std::shared_ptr<ITestCase>((ITestCase*) new CrossingTestCase(FusionCrowd::ComponentIds::KARAMOUZAS_ID, 30, 1000, false)),
+		//std::shared_ptr<ITestCase>((ITestCase*) new CrossingTestCase(FusionCrowd::ComponentIds::ORCA_ID, 16, 2000, true)),
 		// std::shared_ptr<ITestCase>((ITestCase*) new PinholeTestCase(FusionCrowd::ComponentIds::KARAMOUZAS_ID, 2, 100)),
-		// std::shared_ptr<ITestCase>((ITestCase*) new TshapedFancyTestCase(FusionCrowd::ComponentIds::ORCA_ID, 200, 1000, true)),
+		//std::shared_ptr<ITestCase>((ITestCase*) new TshapedFancyTestCase(FusionCrowd::ComponentIds::BICYCLE, 10, 1000, true)),
 		// std::shared_ptr<ITestCase>((ITestCase*) new NavGraphTestCase(100, 1000, true)),
-		// std::shared_ptr<ITestCase>((ITestCase*) new StenkaNaStenkuTestCase(500, 1000, true)),
+		//std::shared_ptr<ITestCase>((ITestCase*) new StenkaNaStenkuTestCase(10, 1000, true)),
 	};
 
 	std::vector<long long> measurements;

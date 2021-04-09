@@ -20,7 +20,7 @@ namespace TestFusionCrowd
 	{
 		std::string navPath = "Resources/square.nav";
 
-		ComponentId op = FusionCrowd::ComponentIds::ORCA_ID;
+		ComponentId op = FusionCrowd::ComponentIds::BICYCLE;
 
 		std::shared_ptr<ISimulatorBuilder> builder(BuildSimulator(), BuilderDeleter);
 		builder->WithNavMesh("Resources/square.nav")

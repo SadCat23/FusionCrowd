@@ -73,14 +73,14 @@ namespace TestFusionCrowd
 
 		std::unique_ptr<ISimulatorBuilder, decltype(&BuilderDeleter)> builder(BuildSimulator(), BuilderDeleter);
 		builder
-			->WithNavMesh("Resources/t-shaped-fancy.nav")
+			->WithNavMesh("Resources/tradeshow.nav")
 			->WithOp(_opComponent)
 		    ->WithStrategy(ComponentIds::FSM_ID);
 
-		const Fsm::Point p1 = {4.0f, 2.0f};
-		const Fsm::Point p2 = {3.0f, 17.0f};
-		const Fsm::Point p3 = {28.0f, 6.5f};
-		const Fsm::Point p4 = {28.0f, 12.0f};
+		const Fsm::Point p1 = { 4.0f, 2.0f };
+		const Fsm::Point p2 = { 3.0f, 17.0f };
+		const Fsm::Point p3 = { 28.0f, 6.5f };
+		const Fsm::Point p4 = { 28.0f, 12.0f };
 
 		_sim = std::unique_ptr<ISimulatorFacade, decltype(&SimulatorFacadeDeleter)>(builder->Build(), SimulatorFacadeDeleter);
 		_sim->SetIsRecording(WriteTrajectories);
@@ -96,7 +96,7 @@ namespace TestFusionCrowd
 		fsmStrat->CreateGoToAction(fsmId, States::HeadingTo4, p4);
 
 		fsmStrat->SetTickEvent(fsmId, Events::Tick);
-		fsmStrat->CreateTimerEvent(fsmId, States::Deciding, Events::TimerExpired, 0.0f, 100.0f);
+		fsmStrat->CreateTimerEvent(fsmId, States::Deciding, Events::TimerExpired, 0.0f, 0.0f);
 		fsmStrat->CreatePointReachEvent(fsmId, Events::Reached1, p1, 2.0f);
 		fsmStrat->CreatePointReachEvent(fsmId, Events::Reached2, p2, 2.0f);
 		fsmStrat->CreatePointReachEvent(fsmId, Events::Reached3, p3, 2.0f);
@@ -105,16 +105,16 @@ namespace TestFusionCrowd
 		Fsm::AgentParams flowMachineParams; flowMachineParams.FsmId = fsmId;
 
 		size_t firstHalf = _agentsNum / 2;
-		for (int i = 0; i < firstHalf; i++)
-		{
-			size_t id = _sim->AddAgent(RandFloat(p1.x - 1, p1.x + 1), RandFloat(p1.y - 1, p1.y + 1), _opComponent, ComponentIds::NAVMESH_ID, ComponentIds::FSM_ID);
+		//for (int i = 0; i < firstHalf*2; i++)
+		//{
+			size_t id = _sim->AddAgent(RandFloat(p2.x - 1, p2.x + 1), RandFloat(p2.y - 1, p2.y + 1), _opComponent, ComponentIds::NAVMESH_ID, ComponentIds::FSM_ID);
 			_sim->SetAgentStrategyParam(id, ComponentIds::FSM_ID, flowMachineParams);
-		}
+		//}
 
-		for (int i = firstHalf; i < _agentsNum; i++)
+		/*for (int i = firstHalf; i < _agentsNum; i++)
 		{
 			size_t id = _sim->AddAgent(RandFloat(p2.x - 1, p2.x + 1), RandFloat(p2.y - 1, p2.y + 1), _opComponent, ComponentIds::NAVMESH_ID, ComponentIds::FSM_ID);
 			_sim->SetAgentStrategyParam(id, ComponentIds::FSM_ID, flowMachineParams);
-		}
+		}*/
 	}
 }

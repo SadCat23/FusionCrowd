@@ -39,7 +39,7 @@ namespace FusionCrowd
 					trajs << id << separator
 					      << info.posX << separator << info.posY << separator
 					      << info.orientX << separator << info.orientY << separator
-					      << info.radius;
+					      << info.radius << separator << info.delta;
 
 					first = false;
 				}

@@ -22,6 +22,7 @@ namespace FusionCrowd
 			float posX, posY;
 			float velX, velY;
 			float orientX, orientY;
+			float delta;
 			float radius;
 
 			ComponentId opCompId;

@@ -5,7 +5,7 @@
 #include "Navigation/NavSystem.h"
 #include "OperationComponent/IOperationComponent.h"
 #include "Export/ComponentId.h"
-
+#include "Math/Line.h"
 
 #include <map>
 
@@ -45,13 +45,16 @@ namespace FusionCrowd
 		public:
 			BicycleComponent(std::shared_ptr<NavSystem> navSystem);
 			~BicycleComponent();
-
+			float _timeHorizonObst = 0.15f;
+			float _timeHorizon = 2.5; 
 			ComponentId GetId() override { return ComponentIds::BICYCLE; };
 
 			void AddAgent(size_t id) override;
 			void AddAgent(size_t id, float mass);
 			bool DeleteAgent(size_t id) override;
 			void Update(float timeStep) override;
+			size_t ComputeORCALines(std::vector<FusionCrowd::Math::Line>& _orcaLines, size_t agentId, float timeStep);
+			void ObstacleLine(std::vector<FusionCrowd::Math::Line>& _orcaLines, Obstacle & obst, const float invTau, bool flip, size_t agentId);
 
 		private:
 			void ComputeNewVelocity(AgentSpatialInfo & agent, float timeStep);

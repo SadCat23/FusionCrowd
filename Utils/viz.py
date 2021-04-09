@@ -42,7 +42,7 @@ def read_trajectories(filename):
         traj_file = csv.reader(csvfile, delimiter=',')
 
         for step, row in enumerate(traj_file):
-            for agent_id, x, y, orientx, orienty, radius in grouper(row, 6):
+            for agent_id, x, y, orientx, orienty, radius,delta in grouper(row, 7):
                 info = AgentInfo(int(agent_id), (float(x), float(y)), (float(orientx), float(orienty)), float(radius))
                 minx = min(info.pos[0], minx)
                 miny = min(info.pos[1], miny)
