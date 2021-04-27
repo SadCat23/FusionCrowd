@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <direct.h>
-
+#include <numeric>
 #include "TestCases/TradeshowTestCase.h"
 #include "TestCases/NeighbourSearchBenchCase.h"
 #include "TestCases/ZanlungoCase.h"
@@ -63,7 +63,7 @@ void Run(std::shared_ptr<ITestCase> testCase, std::vector<long long> & outMeasur
 	std::copy(measurements.begin(), measurements.end(), std::back_inserter(outMeasurements));
 
 	std::sort(measurements.begin(), measurements.end());
-
+	float avg = std::accumulate(measurements.begin(), measurements.end(), 0.0) / measurements.size();
 	std::cout << "  Step time stats:"
 		<< " min=" << measurements[0]
 		<< " Q1="  << measurements[steps / 4]
@@ -71,7 +71,9 @@ void Run(std::shared_ptr<ITestCase> testCase, std::vector<long long> & outMeasur
 		<< " Q3="  << measurements[steps * 3 / 4]
 		<< " Q95=" << measurements[steps * 95 / 100]
 		<< " max=" << measurements[steps - 1]
+		<< " avg"  << avg
 		<< std::endl;
+	getchar();
 }
 
 void WriteToFile(std::shared_ptr<ITestCase> testCase, std::vector<long long> measurements, time_point startTime, std::string folder)
@@ -105,8 +107,8 @@ int main()
 	std::vector<std::shared_ptr<ITestCase>> cases =
 	{
 
-		std::shared_ptr<ITestCase>((ITestCase*) new FsmTestCase(FusionCrowd::ComponentIds::ORCA_ID, 1, 1000, true)),
-		//std::shared_ptr<ITestCase>((ITestCase*) new TradeshowTestCase(2, 800, true)),
+		//std::shared_ptr<ITestCase>((ITestCase*) new FsmTestCase(FusionCrowd::ComponentIds::BICYCLE, 100000, 1000, true)),
+		std::shared_ptr<ITestCase>((ITestCase*) new TradeshowTestCase(20, 800, true)),
 		// std::shared_ptr<ITestCase>((ITestCase*) new ZanlungoCase()),
 		//std::shared_ptr<ITestCase>((ITestCase*) new CrossingTestCase(FusionCrowd::ComponentIds::ORCA_ID, 16, 2000, true)),
 		// std::shared_ptr<ITestCase>((ITestCase*) new PinholeTestCase(FusionCrowd::ComponentIds::KARAMOUZAS_ID, 2, 100)),

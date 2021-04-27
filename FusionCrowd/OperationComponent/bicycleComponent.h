@@ -46,7 +46,7 @@ namespace FusionCrowd
 			BicycleComponent(std::shared_ptr<NavSystem> navSystem);
 			~BicycleComponent();
 			float _timeHorizonObst = 0.15f;
-			float _timeHorizon = 2.5; 
+			float _timeHorizon = 2.5f; 
 			ComponentId GetId() override { return ComponentIds::BICYCLE; };
 
 			void AddAgent(size_t id) override;

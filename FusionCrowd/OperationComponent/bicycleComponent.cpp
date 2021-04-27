@@ -280,7 +280,7 @@ namespace FusionCrowd
 	
 		void BicycleComponent::ComputeNewVelocity(AgentSpatialInfo & agent, float timeStep)
 		{
-			int indexRule = 1;
+			int indexRule = 0;
 				if (indexRule == 0)
 				{
 					float anglePredict = 0;

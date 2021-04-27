@@ -7,7 +7,7 @@
 #include "Export/ComponentId.h"
 #include "Export/Fsm/IStrategyConfigurator.h"
 #include "Export/Fsm/IFsm.h"
-
+#include <ctime> 
 #include <fstream>
 #include <vector>
 
@@ -15,6 +15,10 @@ using namespace FusionCrowd;
 
 namespace TestFusionCrowd
 {
+	struct SpawnCoord
+	{
+		float x, y;
+	};
 	enum States : Fsm::State
 	{
 		Initial,
@@ -96,15 +100,32 @@ namespace TestFusionCrowd
 		Fsm::AgentParams flowMachineParams; flowMachineParams.FsmId = fsmId;
 
 		std::ifstream agentPositions("Resources/TradeshowAgents.txt");
-		int countAgent = 0;
+	
+		
+		std::vector<SpawnCoord> SpawnVector;
 		while(agentPositions >> x >> y)
 		{
-			if (_agentsNum>=countAgent)
-			{
-				countAgent++;
-				size_t id = _sim->AddAgent(x, y, _op, ComponentIds::NAVMESH_ID, ComponentIds::FSM_ID);
-				_sim->SetAgentStrategyParam(id, ComponentIds::FSM_ID, flowMachineParams);
-			}
+			
+			
+			
+				SpawnCoord coord =  SpawnCoord();
+				coord.x = x;
+				coord.y = y;
+				SpawnVector.push_back(coord);
+				
+				
+			
 		}
+		srand(time(NULL));
+	for(int i=0;i<_agentsNum;i++)
+	{
+		
+		
+		SpawnCoord coord;
+		coord.x = SpawnVector[rand()%1000].x;
+		coord.y = SpawnVector[rand() % 1000].y;
+		size_t id = _sim->AddAgent(coord.x, coord.y, _op, ComponentIds::NAVMESH_ID, ComponentIds::FSM_ID);
+		_sim->SetAgentStrategyParam(id, ComponentIds::FSM_ID, flowMachineParams);
+	}
 	}
 }
